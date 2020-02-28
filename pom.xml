@@ -4,10 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.aug04</groupId>
 	<artifactId>mno-conversion</artifactId>
-	<version>1.1</version>
+	<version>1.3</version>
 	<name>mno-conversion</name>
 	<description>A library support to convert between Map and Object type</description>
 	<url>http://github.com/aug04/mno-conversion</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<licenses>
 		<license>
@@ -93,7 +97,7 @@
 	</distributionManagement>
 
 	<build>
-		<!-- <sourceDirectory>src</sourceDirectory> -->
+		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
