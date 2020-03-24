@@ -12,11 +12,37 @@ public abstract class MapAndObjectConversion {
 		this.processing = new Processing<>();
 	}
 	
-	public Map<Object, Object> toMap() throws Exception {
-		return processing.toMap(this.getClass(), this);
+	/**
+	 * Convert the instance to a Map.
+	 * 
+	 * @return a Map if convert success, else return null.
+	 * @author AUG
+	 */
+	public Map<Object, Object> toMap() {
+		try {
+			return processing.toMap(this.getClass(), this);
+		} catch (Exception e) {
+			// ignored
+		}
+		
+		return null;
 	}
 	
-	public MapAndObjectConversion fromMap(Map<Object, Object> map) throws Exception {
-		return processing.fromMap(map, this);
+	/**
+	 * Convert a Map to an this instance.
+	 * 
+	 * @param map is data to convert.
+	 * @return an instance keep values from the map, else return null.
+	 * @author AUG
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends MapAndObjectConversion> T fromMap(Map<Object, Object> map) {
+		try {
+			return (T) processing.fromMap(map, this);
+		} catch (Exception e) {
+			// ignored
+		}
+		
+		return null;
 	}
 }
