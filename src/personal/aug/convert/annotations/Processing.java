@@ -2,13 +2,17 @@ package personal.aug.convert.annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import personal.aug.convert.MapAndObjectConversion;
 
 public class Processing<T extends MapAndObjectConversion> {
 
+	@SuppressWarnings("unchecked")
 	public Map<Object, Object> toMap(Class<?> clazz, Object instance) throws Exception {
 		Map<Object, Object> result = null;
 		
@@ -17,34 +21,75 @@ public class Processing<T extends MapAndObjectConversion> {
 				&& (instance.getClass() == clazz)) {
 			result = new HashMap<>();
 			
-			Field[] fields = clazz.getDeclaredFields();
-			if (fields.length > 0) {
-				for (Field field : fields) {
-					field.setAccessible(true);
-					Object value = field.get(instance);
-					String key = field.getName();
-					
-					Annotation[] annotations = field.getAnnotations();
-					for (Annotation ann : annotations) {
-						if (ann instanceof MapKey) {
-							String _key = ((MapKey) ann).value();
-							if (_key != null && !_key.isEmpty()) key = _key;
+			if (instance instanceof Map<?, ?>) {
+				Map<Object, Object> instanceMap = (Map<Object, Object>) instance;
+				for (Map.Entry<Object, Object> entry : instanceMap.entrySet()) {
+					if (entry != null) {
+						Object value = entry.getValue();
+						if (!value.getClass().getName().startsWith("java.lang")) {
+							instanceMap.put(entry.getKey(), toMap(entry.getValue().getClass(), entry.getValue()));
 						}
 					}
-					
-					try {
-						final String className = value.getClass().getName();
-						if (!className.startsWith("java.lang.")) {
-							Field[] valueFields = value.getClass().getDeclaredFields();
-							if (valueFields != null && valueFields.length > 0) {
-								value = toMap(value.getClass(), value);
+				}
+				
+				result = instanceMap;
+			} else {
+				Field[] fields = clazz.getDeclaredFields();
+				if (fields.length > 0) {
+					for (Field field : fields) {
+						field.setAccessible(true);
+						Object value = field.get(instance);
+						String key = field.getName();
+						
+						Annotation[] annotations = field.getAnnotations();
+						for (Annotation ann : annotations) {
+							if (ann instanceof MapKey) {
+								String _key = ((MapKey) ann).value();
+								if (_key != null && !_key.isEmpty()) key = _key;
 							}
 						}
-					} catch (Exception e) {
-						// ignored
+						
+						try {
+							final String className = value.getClass().getName();
+							if (!className.startsWith("java.lang.")) {
+								if (value instanceof Map<?, ?>) {
+									// do nothing
+								} else if (value instanceof Iterable<?>) {
+									Iterable<?> iterable = (Iterable<?>) value;
+									if (iterable != null && iterable.iterator() != null) {
+										List<Object> listValue = new ArrayList<>();
+										Iterator<?> it = iterable.iterator();
+										while (it.hasNext()) {
+											Object obj = it.next();
+											listValue.add(toMap(obj.getClass(), obj));
+										}
+										
+										value = listValue;
+									}
+								} else if (value.getClass().isArray()) {
+									Object[] arrayValue = (Object[]) value;
+									if (arrayValue != null && arrayValue.length > 0) {
+										List<Object> listValue = new ArrayList<>();
+										for (int i = 0; i < arrayValue.length; i++) {
+											Object obj = arrayValue[i];
+											listValue.add(toMap(obj.getClass(), obj));
+										}
+										
+										value = listValue;
+									}
+								} else {
+									Field[] valueFields = value.getClass().getDeclaredFields();
+									if (valueFields != null && valueFields.length > 0) {
+										value = toMap(value.getClass(), value);
+									}
+								}
+							}
+						} catch (Exception e) {
+							// ignored
+						}
+						
+						result.put(key, value);
 					}
-					
-					result.put(key, value);
 				}
 			}
 		}
