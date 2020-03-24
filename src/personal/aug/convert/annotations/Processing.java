@@ -5,7 +5,9 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Processing {
+import personal.aug.convert.MapAndObjectConversion;
+
+public class Processing<T extends MapAndObjectConversion> {
 
 	public Map<Object, Object> toMap(Class<?> clazz, Object instance) throws Exception {
 		Map<Object, Object> result = null;
@@ -30,6 +32,18 @@ public class Processing {
 						}
 					}
 					
+					try {
+						final String className = value.getClass().getName();
+						if (!className.startsWith("java.lang.")) {
+							Field[] valueFields = value.getClass().getDeclaredFields();
+							if (valueFields != null && valueFields.length > 0) {
+								value = toMap(value.getClass(), value);
+							}
+						}
+					} catch (Exception e) {
+						// ignored
+					}
+					
 					result.put(key, value);
 				}
 			}
@@ -38,7 +52,7 @@ public class Processing {
 		return result;
 	}
 	
-	public void fromMap(Map<Object, Object> map, Object instance) throws Exception {
+	public T fromMap(Map<Object, Object> map, T instance) throws Exception {
 		
 		if (instance != null) {
 			Field[] fields = instance.getClass().getDeclaredFields();
@@ -61,5 +75,7 @@ public class Processing {
 				}
 			}
 		}
+		
+		return instance;
 	}
 }

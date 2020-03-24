@@ -6,17 +6,17 @@ import personal.aug.convert.annotations.Processing;
 
 public abstract class MapAndObjectConversion {
 
-	private Processing processing;
+	private Processing<MapAndObjectConversion> processing;
 	
 	public MapAndObjectConversion() {
-		this.processing = new Processing();
+		this.processing = new Processing<>();
 	}
 	
 	public Map<Object, Object> toMap() throws Exception {
 		return processing.toMap(this.getClass(), this);
 	}
 	
-	public void fromMap(Map<Object, Object> map) throws Exception {
-		processing.fromMap(map, this);
+	public MapAndObjectConversion fromMap(Map<Object, Object> map) throws Exception {
+		return processing.fromMap(map, this);
 	}
 }
