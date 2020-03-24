@@ -97,6 +97,14 @@ public class Processing<T extends MapAndObjectConversion> {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param map is holder value
+	 * @param instance is object keep value after convert complete
+	 * @return generic object
+	 * @throws Exception when convert error
+	 * @author AUG
+	 */
 	public T fromMap(Map<Object, Object> map, T instance) throws Exception {
 		
 		if (instance != null) {

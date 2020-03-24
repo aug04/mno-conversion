@@ -32,6 +32,7 @@ public abstract class MapAndObjectConversion {
 	 * Convert a Map to an this instance.
 	 * 
 	 * @param map is data to convert.
+	 * @param <T> is generic type.
 	 * @return an instance keep values from the map, else return null.
 	 * @author AUG
 	 */
