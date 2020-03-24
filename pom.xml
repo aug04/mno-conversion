@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.aug04</groupId>
 	<artifactId>mno-conversion</artifactId>
-	<version>1.5</version>
+	<version>1.6</version>
 	<name>mno-conversion</name>
 	<description>A library support to convert between Map and Object type</description>
 	<url>http://github.com/aug04/mno-conversion</url>
