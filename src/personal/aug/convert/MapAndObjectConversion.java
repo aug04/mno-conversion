@@ -23,6 +23,7 @@ public abstract class MapAndObjectConversion {
 			return processing.toMap(this.getClass(), this);
 		} catch (Exception e) {
 			// ignored
+			e.printStackTrace();
 		}
 		
 		return null;
@@ -42,6 +43,7 @@ public abstract class MapAndObjectConversion {
 			return (T) processing.fromMap(map, this);
 		} catch (Exception e) {
 			// ignored
+			e.printStackTrace();
 		}
 		
 		return null;
