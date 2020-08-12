@@ -20,6 +20,7 @@ public class Processing<T extends MapAndObjectConversion> {
 			result = new HashMap<>();
 
 			if (instance instanceof Map<?, ?>) {
+				System.out.println("GO TO HERE");
 				Map<Object, Object> instanceMap = (Map<Object, Object>) instance;
 				for (Map.Entry<Object, Object> entry : instanceMap.entrySet()) {
 					if (entry != null) {
@@ -76,6 +77,14 @@ public class Processing<T extends MapAndObjectConversion> {
 
 										value = listValue;
 									}
+								} else if (value instanceof java.util.Date) {
+									value = ((java.util.Date) value).getTime();
+								} else if (value instanceof java.sql.Date) {
+									value = ((java.sql.Date) value).getTime();
+								} else if (value instanceof java.sql.Timestamp) {
+									value = ((java.sql.Timestamp) value).getTime();
+								} else if (value instanceof java.sql.Time) {
+									value = ((java.sql.Time) value).getTime();
 								} else {
 									Field[] valueFields = value.getClass().getDeclaredFields();
 									if (valueFields != null && valueFields.length > 0) {
@@ -136,11 +145,11 @@ public class Processing<T extends MapAndObjectConversion> {
 		final String simpleName = field.getType().getSimpleName();
 		if (value == null) {
 			value = getPrimitiveValue(simpleName);
-			
+
 			field.set(obj, value);
 			return;
 		}
-		
+
 		try {
 			switch (simpleName.toLowerCase()) {
 			case "long":
@@ -169,7 +178,7 @@ public class Processing<T extends MapAndObjectConversion> {
 			field.set(obj, value);
 		}
 	}
-	
+
 	private Object getPrimitiveValue(String simpleName) {
 		Object value = null;
 		if ("short".equals(simpleName))
@@ -184,7 +193,7 @@ public class Processing<T extends MapAndObjectConversion> {
 			value = Integer.valueOf("0").longValue();
 		else if ("boolean".equals(simpleName))
 			value = false;
-		
+
 		return value;
 	}
 }
