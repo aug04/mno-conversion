@@ -20,7 +20,6 @@ public class Processing<T extends MapAndObjectConversion> {
 			result = new HashMap<>();
 
 			if (instance instanceof Map<?, ?>) {
-				System.out.println("GO TO HERE");
 				Map<Object, Object> instanceMap = (Map<Object, Object>) instance;
 				for (Map.Entry<Object, Object> entry : instanceMap.entrySet()) {
 					if (entry != null) {
@@ -107,7 +106,7 @@ public class Processing<T extends MapAndObjectConversion> {
 
 	/**
 	 * 
-	 * @param map      is holder value
+	 * @param map is holder value
 	 * @param instance is object keep value after convert complete
 	 * @return generic object
 	 * @throws Exception when convert error
